@@ -32,6 +32,10 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'apps.hater_app',
+    'oauth_tokens',
+    'm2m_history',
+    'taggit',
+    'twitter_api',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -80,6 +84,14 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+
+# oauth-tokens settings
+OAUTH_TOKENS_HISTORY = True                                        # to keep in DB expired access tokens
+OAUTH_TOKENS_TWITTER_CLIENT_ID = ''                                # application ID
+OAUTH_TOKENS_TWITTER_CLIENT_SECRET = ''                            # application secret key
+OAUTH_TOKENS_TWITTER_USERNAME = ''                                 # user login
+OAUTH_TOKENS_TWITTER_PASSWORD = ''                                 # user password
 
 
 # Password validation
