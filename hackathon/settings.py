@@ -32,10 +32,6 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'apps.hater_app',
-    'oauth_tokens',
-    'm2m_history',
-    'taggit',
-    'twitter_api',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
