@@ -51,21 +51,31 @@
 			<p>{{ term }}</p>
 			<form id="search" action="/search" method="POST">
 			{% csrf_token %}
-				<label>Yelp search = pizza, San Jose</label>
+				<label>Enter one or more words or phrases to search for:</label>
 				<br />
+				<input id="term" type="text" name="term" tabindex="1" />
+				<br />
+				<input type="submit" name="Search" tabindex="2" />
 				<input id='latitudetime' type='hidden' name='lati' value='' />
 				<input id='longitudetime' type='hidden' name='longi' value='' />
-				<input type="submit" value="GO!" />
 			</form>
 			<div id="response">
-			{% for business in businesses reversed %}
-				{% if business.rating < 3.6 %}
-					<p>{{business.name}}</p>
-					<p>{{business.rating}}</p>
-					<p>{{business.review_count}}</p>
-					<img src={{business.rating_img_url_large}} />
-				{% endif %}
-			{% endfor %}
+				<p>TOTAL {{ total }}</p>
+				{% for business in businesses %}
+					{% if business.rating <= 3 %}
+					<p><a href='business.url'>{{ business.name }}</a></p>
+					<p><img src='{{ business.rating_img_url_large }}' /> {{ business.review_count }} total reviews</p>
+					<p>{{ business.snippet_text }}</p>
+					<p>
+						{% for item in business.location.display_address %}
+							{{ item }},<br/>
+						{% endfor %}
+					</p>
+					<p>lat {{ business.location.coordinate.latitude }}, lng {{ business.location.coordinate.longitude }}</p>
+					<p>{{ business.display_phone }}</p>
+					{%  endif %}
+				{% endfor %}
+				<p>{{ test }}</p>
 			</div>
 		</div>
 	</body>

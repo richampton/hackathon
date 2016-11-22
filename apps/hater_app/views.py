@@ -22,16 +22,26 @@ def index(request):
 
 def search(request):
 	if request.method == "POST":
+
 		latitude = float(request.POST['lati'])
 		longitude = float(request.POST['longi'])
+
+		terms = request.POST['term']
+		split_terms = terms.split(',')
+		search_terms = ''
+		print len(split_terms)
+		for term in split_terms:
+			search_terms += str(term)+','
+
 		params = {
 			'sort_by' : 'rating',
-			'term' : 'pizza',
+			'term' : search_terms,
 			'lang' : 'en',
 			'radius_filter' : 2000
 		}
 		response = client.search_by_coordinates(latitude, longitude, **params)
 	context = {
-				'businesses' : response.businesses
+		'businesses' : response.businesses,
+		'total'     : response.total
 	}
 	return render(request, 'hater_app/index.html', context)
