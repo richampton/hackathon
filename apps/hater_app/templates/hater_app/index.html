@@ -8,23 +8,64 @@
         <script src="https://code.jquery.com/jquery-2.2.4.min.js"
         	integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
         	crossorigin="anonymous"></script>
-		<script>
-			$(document).ready(function() {
+			<script>
+      // Note: This example requires that you consent to location sharing when
+      // prompted by your browser. If you see the error "The Geolocation service
+      // failed.", it means you probably did not give permission for the browser to
+      // locate you.
 
-			});
-        </script>
+      function initMap() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(function(position) {
+            var pos = {
+              lat: position.coords.latitude,
+              lng: position.coords.longitude
+            };
+			var lati = pos.lat
+			var longi = pos.lng
+			document.getElementById("latitudetime").value = lati;
+			document.getElementById("longitudetime").value = longi;
+          }, function() {
+            handleLocationError(true, infoWindow, map.getCenter());
+          });
+        } else {
+
+          handleLocationError(false, infoWindow, map.getCenter());
+        }
+      }
+
+      function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+        infoWindow.setPosition(pos);
+        infoWindow.setContent(browserHasGeolocation ?
+                              'Error: The Geolocation service failed.' :
+                              'Error: Your browser doesn\'t support geolocation.');
+      }
+    </script>
+	<script async defer
+	src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap">
+	</script>
 	</head>
 	<body>
 		<div id="container">
 			<h1>{{ hello }}</h1>
 			<p>{{ term }}</p>
-			<form id="search" action="/search_twitter" method="POST">
+			<form id="search" action="/search" method="POST">
 			{% csrf_token %}
 				<label>Yelp search = pizza, San Jose</label>
 				<br />
-				<input type="submit" name="GO!" />
+				<input id='latitudetime' type='hidden' name='lati' value='' />
+				<input id='longitudetime' type='hidden' name='longi' value='' />
+				<input type="submit" value="GO!" />
 			</form>
 			<div id="response">
+			{% for business in businesses reversed %}
+				{% if business.rating < 3.6 %}
+					<p>{{business.name}}</p>
+					<p>{{business.rating}}</p>
+					<p>{{business.review_count}}</p>
+					<img src={{business.rating_img_url_large}} />
+				{% endif %}
+			{% endfor %}
 			</div>
 		</div>
 	</body>
