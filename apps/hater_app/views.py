@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, HttpResponse
 from TwitterSearch import *
 from yelp.client import Client
 from yelp.oauth1_authenticator import Oauth1Authenticator
-#import googlemaps
+
 
 auth = Oauth1Authenticator(
 	consumer_key = 'sKWWP86fBkphMtLTYINRdQ',
@@ -22,7 +22,6 @@ def search(request):
 
 		latitude = float(request.POST['lati'])
 		longitude = float(request.POST['longi'])
-
 		if latitude not in request.session:
 			request.session['latitude'] = latitude
 			request.session['longitude'] = longitude
@@ -35,45 +34,47 @@ def search(request):
 			search_terms += str(term)+','
 
 		params = {
-			'sort_by' : 'rating',
-			'term' : search_terms,
-			'lang' : 'en',
+			'sort_by'       : 'rating',
+			'term'          : search_terms,
+			'lang'          : 'en',
 			'radius_filter' : 2000
 		}
-
 		response = client.search_by_coordinates(latitude, longitude, **params)
 
 	context = {
 		'businesses' : response.businesses,
 	}
-
 	return render(request, 'hater_app/index.html', context)
 
 
 def result_disp(request):
-	post = request.POST
-	latitude = post['latitude']
-	longitude = post['longitude']
-	address = post['address']
-	city = post['city']
-	name = post['name']
+	post           = request.POST
+	latitude       = post['latitude']
+	longitude      = post['longitude']
+	address        = post['address']
+	city           = post['city']
+	name           = post['name']
+	review_count   = post['review_count']
 	displayaddress = post['displayaddress']
-	img_rating = post['img_rating']
-	totaladd = address + ' ' + city
-	newadd = ""
+	img_rating     = post['img_rating']
+	totaladd       = address + ' ' + city
+	newadd         = ""
+
 	for i in range (0, len(totaladd)):
 		if totaladd[i] == ' ':
 			newadd += '+'
 		else:
 			newadd += totaladd[i]
-	print newadd
+
 	completeadd = "https://www.google.com/maps/embed/v1/directions?key=AIzaSyA8kcACFywGgMzo59IA8vov0zF1u78f11A&origin=" + str(post['lati']) + "," + str(post['longi']) + "&destination=" + newadd + "&mode=driving"
 	context = {
-					'latitude' : latitude,
-					'longitude' : longitude,
-					'completeadd' : completeadd,
-					'img_rating' : img_rating,
-					'name' : name,
-					'displayaddress' : totaladd
+		'latitude'       : latitude,
+		'longitude'      : longitude,
+		'completeadd'    : completeadd,
+		'img_rating'     : img_rating,
+		'name'           : name,
+		'review_count'   : review_count,
+		'displayaddress' : totaladd
 	}
 	return render(request, 'hater_app/results.html', context)
+
