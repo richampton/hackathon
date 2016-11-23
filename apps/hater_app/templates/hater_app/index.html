@@ -65,8 +65,8 @@
 					<input id="term" class="invalid" type="text" name="term" tabindex="1" />
 					<br />
 					<input class="red lighten-1 btn-large waves-effect waves-light waves-input-wrapper" type="submit" name="Search" tabindex="2" />
-					<input class='latitudetime' type='hidden' name='lati' value='37.375630' />
-					<input class='longitudetime' type='hidden' name='longi' value='-121.910160' />
+					<input class='latitudetime' type='hidden' name='lati' value='{{ request.session.latitude }}' />
+					<input class='longitudetime' type='hidden' name='longi' value='{{ request.session.longitude }}' />
 					<input id="terms" type='hidden' name='terms' value='{{ terms }}' />
 				</form>
 				<br />
@@ -93,7 +93,9 @@
 							</div>
 							<div class="row">
 								<div class="col s5 m4">
+									{% if business.image_url != None %}
 									<img src='{{ business.image_url }}' />
+									{% endif %}
 									<address>
 									{% for item in business.location.display_address %}
 										{{ item }}<br/>
@@ -118,8 +120,8 @@
 										<input type='hidden' name='city' value='{{business.location.city}}' />
 										<input type='hidden' name='address' value='{{business.location.address.0}}' />
 										<input class="red lighten-1 btn-large waves-effect waves-light" type='submit' value='Show On Map' />
-										<input class='latitudetime' type='hidden' name='lati' value='37.375630' />
-										<input class='longitudetime' type='hidden' name='longi' value='-121.910160' />
+										<input class='latitudetime' type='hidden' name='lati' value='{{ request.session.latitude }}' />
+										<input class='longitudetime' type='hidden' name='longi' value='{{ request.session.longitude }}' />
 									</form>
 								</div>
 							</div>
