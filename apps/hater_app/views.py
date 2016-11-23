@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, HttpResponse
 from TwitterSearch import *
 from yelp.client import Client
 from yelp.oauth1_authenticator import Oauth1Authenticator
-
+import googlemaps
 
 auth = Oauth1Authenticator(
 	consumer_key = 'sKWWP86fBkphMtLTYINRdQ',
@@ -45,3 +45,31 @@ def search(request):
 		'total'     : response.total
 	}
 	return render(request, 'hater_app/index.html', context)
+
+def result_disp(request):
+	post = request.POST
+	latitude = post['latitude']
+	longitude = post['longitude']
+	address = post['address']
+	city = post['city']
+	name = post['name']
+	displayaddress = post['displayaddress']
+	img_rating = post['img_rating']
+	totaladd = address + ' ' + city
+	newadd = ""
+	for i in range (0, len(totaladd)):
+		if totaladd[i] == ' ':
+			newadd += '+'
+		else:
+			newadd += totaladd[i]
+	print newadd
+	completeadd = "https://www.google.com/maps/embed/v1/directions?key=AIzaSyA8kcACFywGgMzo59IA8vov0zF1u78f11A&origin=" + str(post['lati']) + "," + str(post['longi']) + "&destination=" + newadd + "&mode=driving"
+	context = {
+					'latitude' : latitude,
+					'longitude' : longitude,
+					'completeadd' : completeadd,
+					'img_rating' : img_rating,
+					'name' : name,
+					'displayaddress' : totaladd
+	}
+	return render(request, 'hater_app/results.html', context)
