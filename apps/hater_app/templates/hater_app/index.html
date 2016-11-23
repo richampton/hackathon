@@ -36,8 +36,7 @@
 					'Error: Your browser doesn\'t support geolocation.');}
 
 			// Glassdoor search
-			if($('#terms').val() != ''){
-				console.log('Terms has a value!', query)
+			$( document ).ready(function() {
 				var ua     = navigator.userAgent,
 					query  = $("#term").val(),
 					gd_url = 'http://api.glassdoor.com/api/api.htm?t.p=107976&t.k=hW3TzCRX74c&userip=54.201.51.99&useragent='+ua+'&format=json&v=1&action=employers&q='+query+'c=San+Jose'
@@ -46,8 +45,8 @@
 					$( "#response div" )
 						.append( "<p>Name: " + data.name )
 						.append( "overallRating: " + data.overallRating + '</p>' );
-					}, "json" );
-			}
+				}, "json" );
+			});
 		</script>
 	</head>
 
@@ -67,7 +66,7 @@
 					<input class="red lighten-1 btn-large waves-effect waves-light waves-input-wrapper" type="submit" name="Search" tabindex="2" />
 					<input class='latitudetime' type='hidden' name='lati' value='37.375630' />
 					<input class='longitudetime' type='hidden' name='longi' value='-121.910160' />
-					<input type='hidden' name='terms' value='{{ terms }}' />
+					<input id="terms" type='hidden' name='terms' value='{{ terms }}' />
 				</form>
 				<br />
 			</div> 

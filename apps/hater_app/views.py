@@ -45,7 +45,7 @@ def search(request):
 
 	context = {
 		'businesses' : response.businesses,
-		'terms'      : terms
+		'terms'      : request.POST['term'],
 	}
 	return render(request, 'hater_app/index.html', context)
 
