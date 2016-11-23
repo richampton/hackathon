@@ -25,7 +25,10 @@ SECRET_KEY = '*twsj=1(3=fmp$%=v*7pvtov*kg2a+3ru5sf8&ucc$k&++@+79'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [ 
+    '54.201.51.99',
+    'localhost'
+]
 
 
 # Application definition
@@ -125,5 +128,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
+
+STATIC_ROOT = os.path.join(BASE_DIR, "static/")
 
 STATIC_URL = '/hackathon/apps/hater_app/static/'

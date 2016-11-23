@@ -33,20 +33,21 @@
 				infoWindow.setPosition(pos);
 				infoWindow.setContent(browserHasGeolocation ?
 					'Error: The Geolocation service failed.' :
-					'Error: Your browser doesn\'t support geolocation.');}
+					'Error: Your browser doesn\'t support geolocation.');
+			}
 
 			// Glassdoor search
-			$( document ).ready(function() {
-				var ua     = navigator.userAgent,
-					query  = $("#term").val(),
-					gd_url = 'http://api.glassdoor.com/api/api.htm?t.p=107976&t.k=hW3TzCRX74c&userip=54.201.51.99&useragent='+ua+'&format=json&v=1&action=employers&q='+query+'c=San+Jose'
+			//$( document ).ready(function() {
+			//	var ua     = navigator.userAgent,
+			//		query  = $("#terms").val(),
+			//		gd_url = 'http://api.glassdoor.com/api/api.htm?t.p=107976&t.k=hW3TzCRX74c&userip=54.201.51.99&useragent='+ua+'&format=json&v=1&action=employers&q='+query+'c=San+Jose'
 
-				$.get( gd_url, function( data ) {
-					$( "#response div" )
-						.append( "<p>Name: " + data.name )
-						.append( "overallRating: " + data.overallRating + '</p>' );
-				}, "json" );
-			});
+			//	$.getJSON('http://anyorigin.com/get?url='+gd_url+'&callback=?', function(data){
+			//		$( "#response div" )
+			//			.append( "<p>Name: " + data.name )
+			//			.append( "overallRating: " + data.overallRating + '</p>' );
+			//	});
+			//});
 		</script>
 	</head>
 
@@ -61,7 +62,7 @@
 				<form id="search" action="/search" method="POST">
 				{% csrf_token %}
 					<br />
-					<input id="term" type="text" name="term" tabindex="1" />
+					<input id="term" class="invalid" type="text" name="term" tabindex="1" />
 					<br />
 					<input class="red lighten-1 btn-large waves-effect waves-light waves-input-wrapper" type="submit" name="Search" tabindex="2" />
 					<input class='latitudetime' type='hidden' name='lati' value='37.375630' />
@@ -72,10 +73,13 @@
 			</div> 
 
 			<div id="response" class="container">
+			<!-- Show when there are no results -->
+			{% if suck == 0 %}
+				<div id="my-toast" class="toast">Dude, that doesn't suck as much as you think</div>
+			{% endif %}
 			{% for business in businesses %}
-				{% if business.rating <= 3 %}
 				<div class="col s12 m6">
-					<div class="card">
+					<div class="card hoverable">
 						<div class="card-content black-text">
 
 							<div class="row">
@@ -121,12 +125,11 @@
 							</div>
 						</div>
 					</div>
-				</div>		
-				{%  endif %}
-			{% endfor %}
-				<div id="glassdoor">
-					<a href='https://www.glassdoor.com/index.htm'>powered by <img src='https://www.glassdoor.com/static/img/api/glassdoor_logo_80.png' title='Job Search' /></a>
 				</div>
+			{% endfor %}
+				<!-- div id="glassdoor">
+					<a href='https://www.glassdoor.com/index.htm'>powered by <img src='https://www.glassdoor.com/static/img/api/glassdoor_logo_80.png' title='Job Search' /></a>
+				</div -->
 			</div>
 
 			<div class="container">

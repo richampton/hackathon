@@ -42,10 +42,18 @@ def search(request):
 		}
 		# Yelp call
 		response = client.search_by_coordinates(latitude, longitude, **params)
+		print ('response', response, 'response.businesses', response.businesses)
+
+		businesses = [];
+		# Keep only the suck
+		for business in response.businesses:
+			if business.rating <= 3:
+				businesses.append(business)
 
 	context = {
-		'businesses' : response.businesses,
+		'businesses' : businesses,
 		'terms'      : request.POST['term'],
+		'suck'       : len(businesses)
 	}
 	return render(request, 'hater_app/index.html', context)
 
