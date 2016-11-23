@@ -4,17 +4,11 @@
 		<meta charset="utf-8">
 	    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
   		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
-		<title>Hackathon</title>
-		{% load staticfiles %}
-
-		<!--CSS-->
-
-		  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-		  <link href="{% static 'hater_app/css/materialize.css' %}" type="text/css" rel="stylesheet" media="screen,projection"/>
-		  <link href="{% static 'hater_app/css/main.css' %}" type="text/css" rel="stylesheet" media="screen,projection"/>
-
-
-		<!--CSS END-->
+		<title>Find A Sucky Business</title>
+		{% load static %}
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		<link href="{% static 'hater_app/css/materialize.css' %}" type="text/css" rel="stylesheet" media="screen,projection"/>
+		<link href="{% static 'hater_app/css/main.css' %}" type="text/css" rel="stylesheet" media="screen,projection"/>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 		<script>
 			function initMap() {
@@ -40,6 +34,20 @@
 				infoWindow.setContent(browserHasGeolocation ?
 					'Error: The Geolocation service failed.' :
 					'Error: Your browser doesn\'t support geolocation.');}
+
+			// Glassdoor search
+			if($('#terms').val() != ''){
+				console.log('Terms has a value!', query)
+				var ua     = navigator.userAgent,
+					query  = $("#term").val(),
+					gd_url = 'http://api.glassdoor.com/api/api.htm?t.p=107976&t.k=hW3TzCRX74c&userip=54.201.51.99&useragent='+ua+'&format=json&v=1&action=employers&q='+query+'c=San+Jose'
+
+				$.get( gd_url, function( data ) {
+					$( "#response div" )
+						.append( "<p>Name: " + data.name )
+						.append( "overallRating: " + data.overallRating + '</p>' );
+					}, "json" );
+			}
 		</script>
 	</head>
 
@@ -59,6 +67,7 @@
 					<input class="red lighten-1 btn-large waves-effect waves-light waves-input-wrapper" type="submit" name="Search" tabindex="2" />
 					<input class='latitudetime' type='hidden' name='lati' value='37.375630' />
 					<input class='longitudetime' type='hidden' name='longi' value='-121.910160' />
+					<input type='hidden' name='terms' value='{{ terms }}' />
 				</form>
 				<br />
 			</div> 
@@ -116,6 +125,9 @@
 				</div>		
 				{%  endif %}
 			{% endfor %}
+				<div id="glassdoor">
+					<a href='https://www.glassdoor.com/index.htm'>powered by <img src='https://www.glassdoor.com/static/img/api/glassdoor_logo_80.png' title='Job Search' /></a>
+				</div>
 			</div>
 
 			<div class="container">

@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, HttpResponse
 from TwitterSearch import *
 from yelp.client import Client
 from yelp.oauth1_authenticator import Oauth1Authenticator
+import requests
 
 
 auth = Oauth1Authenticator(
@@ -39,10 +40,12 @@ def search(request):
 			'lang'          : 'en',
 			'radius_filter' : 2000
 		}
+		# Yelp call
 		response = client.search_by_coordinates(latitude, longitude, **params)
 
 	context = {
 		'businesses' : response.businesses,
+		'terms'      : terms
 	}
 	return render(request, 'hater_app/index.html', context)
 

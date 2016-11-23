@@ -22,3 +22,6 @@ form#search .btn-large {
 #response > div {
 	margin-bottom: 2em;
 }
+#glassdoor img {
+	vertical-align: text-bottom;
+}
