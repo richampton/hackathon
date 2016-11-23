@@ -11,212 +11,164 @@
 
 		  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 		  <link href="{% static 'hater_app/css/materialize.css' %}" type="text/css" rel="stylesheet" media="screen,projection"/>
-		  <link href="{% static 'hater_app/css/style.css' %}" type="text/css" rel="stylesheet" media="screen,projection"/>
+		  <link href="{% static 'hater_app/css/main.css' %}" type="text/css" rel="stylesheet" media="screen,projection"/>
 
 
 		<!--CSS END-->
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-	<script>
-      function initMap() {
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(function(position) {
-            var pos = {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude
-            };
-			var lati = 37.375630
-			var longi = -121.910160
-			$('.latitudetime').val(lati)
-			$('.longitudetime').val(longi)
-          }, function() {
-            handleLocationError(true, infoWindow, map.getCenter());
-          });
-        } else {
-
-          handleLocationError(false, infoWindow, map.getCenter());
-        }
-      }
-
-      function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-        infoWindow.setPosition(pos);
-        infoWindow.setContent(browserHasGeolocation ?
-                              'Error: The Geolocation service failed.' :
-                              'Error: Your browser doesn\'t support geolocation.');}
-    </script>
+		<script>
+			function initMap() {
+				if (navigator.geolocation) {
+					navigator.geolocation.getCurrentPosition(function(position) {
+						var pos = {
+							lat: position.coords.latitude,
+							lng: position.coords.longitude
+						};
+						var lati = pos.lat,
+							longi = pos.lng
+						$('.latitudetime').val(lati)
+						$('.longitudetime').val(longi)
+					}, function() {
+						handleLocationError(true, infoWindow, map.getCenter());
+					});
+				} else {
+					handleLocationError(false, infoWindow, map.getCenter());
+				}
+			}
+			function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+				infoWindow.setPosition(pos);
+				infoWindow.setContent(browserHasGeolocation ?
+					'Error: The Geolocation service failed.' :
+					'Error: Your browser doesn\'t support geolocation.');}
+		</script>
 	</head>
-		<body>
-		  <img class="responsive-img" src="http://i.imgur.com/yAb7rVf.png">
-	  	  <div class="section no-pad-bot" id="index-banner">
-	  	  	<div class="container">
-			      <h1 class="header center red-text text-darken-1">Search Here:</h1>
-				  <div class="row center">
-			        <h5 class="header col s12 light">Enter one or more words or phrases to search for:</h5>
-			      </div>
-			      <!--<nav>-->
-			<!--     <div class="nav-wrapper">   -->
-				     <!--
-				      <form>
-				        <div class="input-field white">
-				          <input id="search" type="search" name="term" tabindex="1" placeholder="..." required>
-				          <label for="search"><i class="material-icons red-text text-darken-1">search</i></label>
-				        </div>
-				      </form>
-				    </div>
-				  </nav>
-				  <p>&nbsp;</p>
-			      <div class="row center">
-			        <a href="results.html" id="download-button" class="btn-large waves-effect waves- red darken-1">Search</a>
-			      </div>
-			      -->
-			 <form id="search" action="/search" method="POST">
-			{% csrf_token %}
-				<br />
-				<input id="term" type="text" name="term" tabindex="1" />
-				<br />
-				<input type="submit" name="Search" tabindex="2" />
-				<input class='latitudetime' type='hidden' name='lati' value='37.375630' />
-				<input class='longitudetime' type='hidden' name='longi' value='-121.910160' />
-			</form>
 
-			      <br>
+	<body>
+		<img class="responsive-img" src="http://i.imgur.com/yAb7rVf.png">
+		<div class="section no-pad-bot" id="index-banner">
+			<div class="container">
+				<h1 class="header center red-text text-darken-1">Search Here:</h1>
+				<div class="row center">
+					<h5 class="header col s12 light">Enter one or more words or phrases to search for:</h5>
+				</div>
+				<form id="search" action="/search" method="POST">
+				{% csrf_token %}
+					<br />
+					<input id="term" type="text" name="term" tabindex="1" />
+					<br />
+					<input class="red lighten-1 btn-large waves-effect waves-light waves-input-wrapper" type="submit" name="Search" tabindex="2" />
+					<input class='latitudetime' type='hidden' name='lati' value='37.375630' />
+					<input class='longitudetime' type='hidden' name='longi' value='-121.910160' />
+				</form>
+				<br />
+			</div> 
 
-			    </div> 
-			  </div>
-			<div id="response">
-				{% for business in businesses %}
-					{% if business.rating <= 3 %}
-	<!--			<div class="row">      -->
-				        <div class="col s12 m6">
-				          <div class="card">
-				            <div class="card-content black-text">
-				              <span class="card-title white"><a href='{{business.url}}'>{{ business.name }}</a></span>
-								<p><img src='{{ business.rating_img_url_large }}' /> {{ business.review_count }} total reviews</p>
-								<p>{{ business.snippet_text }}</p>
-								<p>
-									{% for item in business.location.display_address %}
-										{{ item }},<br/>
-									{% endfor %}
-								</p>
-								<p>{{ business.display_phone }}</p>
+			<div id="response" class="container">
+			{% for business in businesses %}
+				{% if business.rating <= 3 %}
+				<div class="col s12 m6">
+					<div class="card">
+						<div class="card-content black-text">
+
+							<div class="row">
+								<div class="col s12 m7">
+									<h3 class="card-title white"><a href='{{business.url}}'>{{ business.name }}</a></h3>
+								</div>
+								<div class="col s12 m5">
+									<p><img src='{{ business.rating_img_url_large }}' /><br />
+									{{ business.review_count }} total reviews</p>
+								</div>
 							</div>
-								<form action='/result' method='POST'>
+							<div class="row">
+								<div class="col s5 m4">
+									<img src='{{ business.image_url }}' />
+									<address>
+									{% for item in business.location.display_address %}
+										{{ item }}<br/>
+									{% endfor %}
+									<a href="tel:{{ business.display_phone }}">"{{ business.display_phone }}</a>
+									</address>
+								</div>
+								<div class="col s7 m8">
+									<blockquote class="flow-text">{{ business.snippet_text }}</blockquote>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col offset-s3 offset-m6 offset-l9 s9 m6 l3">
+									<form action='/result' method='POST'>
 									{% csrf_token %}
-									<input type='hidden' name='name' value='{{business.name}}' />
-									<input type='hidden' name='latitude' value='{{business.location.coordinate.latitude}}' />
-									<input type='hidden' name='longitude' value='{{business.location.coordinate.longitude}}' />
-									<input type='hidden' name='displayaddress' value='{{business.location.display_address}}' />
-									<input type='hidden' name='img_rating' value='{{business.rating_img_url_large}}' />
-									<input type='hidden' name='city' value='{{business.location.city}}' />
-									<input type='hidden' name='address' value='{{business.location.address.0}}' />
-									<input type='submit' value='Show On Map' />
-									<input class='latitudetime' type='hidden' name='lati' value='37.375630' />
-									<input class='longitudetime' type='hidden' name='longi' value='-121.910160' />
-								</form>
-						   </div>
-						</div>		
-					</div>			
-				</div>
-
-								{%  endif %}
-							{% endfor %}
-		<!--		<div id="response">
-					<p>TOTAL {{ total }}</p>
-					{% for business in businesses %}
-						{% if business.rating <= 3 %}
-						<p><a href='/result'>{{ business.name }}</a></p>
-						<p><img src='{{ business.rating_img_url_large }}' /> {{ business.review_count }} total reviews</p>
-						<p>{{ business.snippet_text }}</p>
-						<p>
-							{% for item in business.location.display_address %}
-								{{ item }},<br/>
-							{% endfor %}
-						</p>
-						<p>{{ business.display_phone }}</p>
-						<form action='/result' method='POST'>
-							{% csrf_token %}
-							<input type='hidden' name='name' value='{{business.name}}' />
-							<input type='hidden' name='latitude' value='{{business.location.coordinate.latitude}}' />
-							<input type='hidden' name='longitude' value='{{business.location.coordinate.longitude}}' />
-							<input type='hidden' name='displayaddress' value='{{business.location.display_address}}' />
-							<input type='hidden' name='img_rating' value='{{business.rating_img_url_large}}' />
-							<input type='hidden' name='city' value='{{business.location.city}}' />
-							<input type='hidden' name='address' value='{{business.location.address.0}}' />
-							<input type='submit' value='Show On Map' />
-							<input class='latitudetime' type='hidden' name='lati' value='37.375630' />
-							<input class='longitudetime' type='hidden' name='longi' value='-121.910160' />
-						</form>
-						{%  endif %}
-					{% endfor %}  -->
-					<!--CSS BEGIN-->
-
-	<div class="container">
-	    <div class="section">
-
-	      <!--   Icon Section   -->
-
-	    <div class="row center">
-
-	        <div class="col s12 m4">
-	          <div class="icon-block">
-	            <h2 class="center red-text text-darken-1"><i class="material-icons"></i></h2>
-	            <h5 class="center"></h5>
-
-	            <p class="light">&nbsp;</p>
-	          </div>
-	        </div>
-
-	        <div class="col s12 m4">
-	          <div class="icon-block">
-	            <h2 class="center red-text text-darken-1"><i class="material-icons">location_on</i></h2>
-	            <h5 class="center">Location is in use</h5>
-
-	            <p class="light">We are currently pulling information from your location. If you turn off location, results will not be accurate. If your location appears to be wrong, please reload.</p>
-	          </div>
-	        </div>
-	      </div>
-
-	    </div>
-	    <br><br>
-
-	    <div class="section">
-
-	    </div>
-	  </div>
-
-	  <footer class="page-footer red darken-1">
-	    <div class="container">
-	      <div class="row">
-	        <div class="col l6 s12">
-	          <h5 class="white-text">About Us</h5>
-	          <p class="grey-text text-lighten-4">We are a team of developers, who enjoy destroying innocent small business owners, that run bad businesses. We aren't very nice.</p>
-
-
-	        </div>
-	        <div class="col l3 s12">
-	          <h5 class="white-text">Links</h5>
-	          <ul>
-	            <li><a class="white-text" href="https://www.yelp.com/developers">Yelp API</a></li>
-	            <li><a class="white-text" href="http://www.codingdojo.com">Coding Dojo</a></li>
-	            <li><a class="white-text" href="http://materializecss.com/">Materialize</a></li>
-	          </ul>
-	        </div>
-	      </div>
-	    </div>
-	    <div class="footer-copyright">
-	      <div class="container">
-	      Made by H8terz
-	      </div>
-	    </div>
-	  </footer>
-
-
-	  <!--  Scripts-->
-	  <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-	  <script src="{% static 'hater_app/js/materialize.js' %}"></script>
-	  <script src="{% static 'hater_app/js/init.js' %}"></script>
-
-	  <!--CSS END-->
-				</div>
+										<input type='hidden' name='name' value='{{business.name}}' />
+										<input type='hidden' name='latitude' value='{{business.location.coordinate.latitude}}' />
+										<input type='hidden' name='longitude' value='{{business.location.coordinate.longitude}}' />
+										<input type='hidden' name='displayaddress' value='{{business.location.display_address}}' />
+										<input type='hidden' name='img_rating' value='{{business.rating_img_url_large}}' />
+										<input type='hidden' name='city' value='{{business.location.city}}' />
+										<input type='hidden' name='address' value='{{business.location.address.0}}' />
+										<input class="red lighten-1 btn-large waves-effect waves-light" type='submit' value='Show On Map' />
+										<input class='latitudetime' type='hidden' name='lati' value='37.375630' />
+										<input class='longitudetime' type='hidden' name='longi' value='-121.910160' />
+									</form>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>		
+				{%  endif %}
+			{% endfor %}
 			</div>
-		</body>
+
+			<div class="container">
+				<div class="section">
+					<!--   Icon Section   -->
+					<div class="row center">
+					 	<div class="col s12 m4">
+					 		<div class="icon-block">
+					 			<h2 class="center red-text text-darken-1"><i class="material-icons"></i></h2>
+					 			<h5 class="center"></h5>
+					 			<p class="light">&nbsp;</p>
+					 		</div>
+					 	</div>
+					 	<div class="col s12 m4">
+					 		<div class="icon-block">
+					 			<h2 class="center red-text text-darken-1"><i class="material-icons">location_on</i></h2>
+					 			<h5 class="center">Location is in use</h5>
+					 			<p class="light">We are currently pulling information from your location. If you turn off location, results will not be accurate. If your location appears to be wrong, please reload.</p>
+					 		</div>
+					 	</div>
+					</div>
+				</div>
+				<br />
+				<br />
+				<div class="section"></div>
+			</div>
+
+			<footer class="page-footer red darken-1">
+				<div class="container">
+					<div class="row">
+						<div class="col l6 s12">
+							<h5 class="white-text">About Us</h5>
+							<p class="grey-text text-lighten-4">We are a team of developers, who enjoy destroying innocent small business owners, that run bad businesses. We aren't very nice.</p>
+						</div>
+						<div class="col l3 s12">
+							<h5 class="white-text">Links</h5>
+							<ul>
+								<li><a class="white-text" href="https://www.yelp.com/developers">Yelp API</a></li>
+								<li><a class="white-text" href="http://www.codingdojo.com">Coding Dojo</a></li>
+								<li><a class="white-text" href="http://materializecss.com/">Materialize</a></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="footer-copyright">
+					<div class="container">Made by H8terz</div>
+				</div>
+			</footer>
+
+			<!--  Scripts-->
+			<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+			<script src="{% static 'hater_app/js/materialize.js' %}"></script>
+			<script src="{% static 'hater_app/js/init.js' %}"></script>
+
+		</div>
+	</body>
 </html>

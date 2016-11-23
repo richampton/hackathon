@@ -2,14 +2,82 @@
 <html>
     <head>
         <meta charset="utf-8">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
         <title>Hackathon</title>
         {% load staticfiles %}
+        <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+        <link href="{% static 'hater_app/css/materialize.css' %}" type="text/css" rel="stylesheet" media="screen,projection"/>
+        <link href="{% static 'hater_app/css/style.css' %}" type="text/css" rel="stylesheet" media="screen,projection"/>
         <link rel="stylesheet" href="{% static 'hater_app/css/main.css' %}" media="screen" title="no title" charset="utf-8">
     </head>
     <body>
-        <img src='{{img_rating}}' />
-        <p>{{name}}</p>
-        <p>{{displayaddress}}</p>
-        <iframe width="500px" height="500px" frameborder="0" style="border:0, margin-left:auto, margin-right:auto" src="{{completeadd}}" allowfullscreen></iframe>
+
+        <img class="responsive-img" src="http://i.imgur.com/yAb7rVf.png">
+        <div class="section no-pad-bot" id="index-banner">
+            <div class="container">
+                <div class="card">
+                    <div class="card-content black-text">
+                        <div class="row">
+                            <div class="col s12 m7">
+                                <h3 class="card-title white"><a href='{{ url }}'>{{ name }}</a></h3>
+                            </div>
+                            <div class="col s12 m5">
+                                <p><img src='{{ img_rating }}' /><br />
+                                    {{ review_count }} total reviews</p>
+                            </div>
+                        </div>
+                    </div>
+                    <iframe width="100%" height="500px" frameborder="0" style="border:0, margin-left:auto, margin-right:auto" src="{{completeadd}}" allowfullscreen></iframe>
+                </div>
+            </div>
+        </div>
+
+        <div class="row center">
+            <div class="col s12 m4">
+                <div class="icon-block">
+                    <h2 class="center red-text text-darken-1"><i class="material-icons"></i></h2>
+                    <h5 class="center"></h5>
+                    <p class="light">&nbsp;</p>
+                </div>
+            </div>
+            <div class="col s12 m4">
+                <div class="icon-block">
+                    <h2 class="center red-text text-darken-1"><i class="material-icons">location_on</i></h2>
+                    <h5 class="center">Location is in use</h5>
+                    <p class="light">We are currently pulling information from your location. If you turn off location, results will not be accurate. If your location appears to be wrong, please reload.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section"></div>
+
+        <footer class="page-footer red darken-1">
+            <div class="container">
+                <div class="row">
+                    <div class="col l6 s12">
+                        <h5 class="white-text">About Us</h5>
+                            <p class="grey-text text-lighten-4">We are a team of developers, who enjoy destroying innocent small business owners, that run bad businesses. We aren't very nice.</p>
+                        </div>
+                    <div class="col l3 s12">
+                        <h5 class="white-text">Links</h5>
+                            <ul>
+                                <li><a class="white-text" href="https://www.yelp.com/developers">Yelp API</a></li>
+                                <li><a class="white-text" href="http://www.codingdojo.com">Coding Dojo</a></li>
+                                <li><a class="white-text" href="http://materializecss.com/">Materialize</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            <div class="footer-copyright">
+                <div class="container">Made by H8terz</div>
+            </div>
+        </footer>
+
+        <!--  Scripts-->
+        <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+        <script src="{% static 'hater_app/js/materialize.js' %}"></script>
+        <script src="{% static 'hater_app/js/init.js' %}"></script>
+        <script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap"></script>
     </body>
 </html>
