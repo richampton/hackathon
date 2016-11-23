@@ -6,38 +6,38 @@
 		{% load staticfiles %}
 		<link rel="stylesheet" href="{% static 'hater_app/css/main.css' %}" media="screen" title="no title" charset="utf-8">
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
-	<script>
-      function initMap() {
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(function(position) {
-            var pos = {
-              lat: position.coords.latitude,
-              lng: position.coords.longitude
-            };
-			var lati = 37.375630
-			var longi = -121.910160
-			$('.latitudetime').val(lati)
-			$('.longitudetime').val(longi)
-          }, function() {
-            handleLocationError(true, infoWindow, map.getCenter());
-          });
-        } else {
-
-          handleLocationError(false, infoWindow, map.getCenter());
-        }
-      }
-
-      function handleLocationError(browserHasGeolocation, infoWindow, pos) {
-        infoWindow.setPosition(pos);
-        infoWindow.setContent(browserHasGeolocation ?
-                              'Error: The Geolocation service failed.' :
-                              'Error: Your browser doesn\'t support geolocation.');}
-    </script>
+        <script>
+        function initMap() {
+        	if (navigator.geolocation) {
+				navigator.geolocation.getCurrentPosition(function(position) {
+					var pos = {
+						lat: position.coords.latitude,
+						lng: position.coords.longitude
+					};
+					var lati = pos.lat,
+						longi = pos.lng;
+					$('.latitudetime').val(lati);
+					$('.longitudetime').val(longi);
+				}, function() {
+					handleLocationError(true, infoWindow, map.getCenter());
+				});
+			} else {
+				handleLocationError(false, infoWindow, map.getCenter());
+			}
+		}
+		function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+			infoWindow.setPosition(pos);
+			infoWindow.setContent(browserHasGeolocation ?
+				'Error: The Geolocation service failed.' :
+				'Error: Your browser doesn\'t support geolocation.');
+		}
+		</script>
+		<script async defer src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap"></script>
 	</head>
+
 	<body>
 		<div id="container">
-			<h1>{{ hello }}</h1>
-			<p>{{ term }}</p>
+			<!-- search businesses -->
 			<form id="search" action="/search" method="POST">
 			{% csrf_token %}
 				<label>Enter one or more words or phrases to search for:</label>
@@ -45,39 +45,39 @@
 				<input id="term" type="text" name="term" tabindex="1" />
 				<br />
 				<input type="submit" name="Search" tabindex="2" />
-				<input class='latitudetime' type='hidden' name='lati' value='37.375630' />
-				<input class='longitudetime' type='hidden' name='longi' value='-121.910160' />
+				<input class='latitudetime' type='hidden' name='lati' value='{{ request.session.latitude }}' />
+				<input class='longitudetime' type='hidden' name='longi' value='{{ request.session.longitude }}' />
 			</form>
+			<!-- loop through businesses -->
 			<div id="response">
-				<p>TOTAL {{ total }}</p>
-				{% for business in businesses %}
-					{% if business.rating <= 3 %}
-					<p><a href='/result'>{{ business.name }}</a></p>
-					<p><img src='{{ business.rating_img_url_large }}' /> {{ business.review_count }} total reviews</p>
-					<p>{{ business.snippet_text }}</p>
-					<p>
-						{% for item in business.location.display_address %}
-							{{ item }},<br/>
-						{% endfor %}
-					</p>
-					<p>lat {{ business.location.coordinate.latitude }}, lng {{ business.location.coordinate.longitude }}</p>
-					<p>{{ business.display_phone }}</p>
-					<form action='/result' method='POST'>
-						{% csrf_token %}
-						<input type='hidden' name='name' value='{{business.name}}' />
-						<input type='hidden' name='latitude' value='{{business.location.coordinate.latitude}}' />
-						<input type='hidden' name='longitude' value='{{business.location.coordinate.longitude}}' />
-						<input type='hidden' name='displayaddress' value='{{business.location.display_address}}' />
-						<input type='hidden' name='img_rating' value='{{business.rating_img_url_large}}' />
-						<input type='hidden' name='city' value='{{business.location.city}}' />
-						<input type='hidden' name='address' value='{{business.location.address.0}}' />
-						<input type='submit' value='Show On Map' />
-						<input class='latitudetime' type='hidden' name='lati' value='37.375630' />
-						<input class='longitudetime' type='hidden' name='longi' value='-121.910160' />
-					</form>
-					{%  endif %}
-				{% endfor %}
-				<p>{{ test }}</p>
+			{% for business in businesses %}
+				{% if business.rating <= 3 %}
+				<h2><a href='{{ business.url }}'>{{ business.name }}</a></h2>
+				<img src='{{ business.image_url }}' />
+				<p><img src='{{ business.rating_img_url_large }}' /> {{ business.review_count }} total reviews</p>
+				<p><img src='{{ business.snippet_image_url }}' />{{ business.snippet_text }}</p>
+				<p>
+					{% for item in business.location.display_address %}
+						{{ item }}<br/>
+					{% endfor %}
+					{{ business.display_phone }}
+				</p>
+				<!-- google maps form -->
+				<form action='/result' method='POST'>
+				{% csrf_token %}
+					<input type='hidden' name='name' value='{{business.name}}' />
+					<input type='hidden' name='latitude' value='{{business.location.coordinate.latitude}}' />
+					<input type='hidden' name='longitude' value='{{business.location.coordinate.longitude}}' />
+					<input type='hidden' name='displayaddress' value='{{business.location.display_address}}' />
+					<input type='hidden' name='img_rating' value='{{business.rating_img_url_large}}' />
+					<input type='hidden' name='city' value='{{business.location.city}}' />
+					<input type='hidden' name='address' value='{{business.location.address.0}}' />
+					<input type='submit' value='Show On Map' />
+					<input class='latitudetime' type='hidden' name='lati' value='{{ request.session.latitude }}' />
+					<input class='longitudetime' type='hidden' name='longi' value='{{ request.session.longitude }}' />
+				</form>
+				{%  endif %}
+			{% endfor %}
 			</div>
 		</div>
 	</body>
